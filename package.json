@@ -1,0 +1,16 @@
+{
+  "name": "formx-js",
+  "version": "1.0.0",
+  "description": "Develop and manage forms easily.",
+  "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^18.3.11",
+    "typescript": "^5.6.3"
+  }
+}
