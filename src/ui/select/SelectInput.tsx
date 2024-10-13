@@ -5,35 +5,27 @@ interface SelectOptionType {
   value: any;
 }
 interface SelectInputProps {
-  label?: string;
-  name: string;
   options: SelectOptionType[];
   placeholder?: string;
   id: string;
 }
 const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
-  ({ name, label, options, id, placeholder, ...props }, ref) => {
+  ({ options, id, placeholder }, ref) => {
     const { formValues, registerFeild, handleChange } = useForm();
     useEffect(() => {
       registerFeild(id, "");
     }, []);
     return (
       <div className="flex flex-col gap-1">
-        {label && (
-          <label className="w-max" htmlFor={label}>
-            {label}
-          </label>
-        )}
         <select
-          name={name}
-          id={name}
+          id={id}
           ref={ref}
-          onChange={(e) => handleChange(name, e.target.value)}
-          value={formValues[name] || ""}
+          onChange={(e) => handleChange(id, e.target.value)}
+          value={formValues[id] || ""}
           className="p-1 rounded-md"
         >
           {placeholder && (
-            <option disabled value="">
+            <option disabled value={""}>
               {placeholder}
             </option>
           )}

@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   ReactNode,
   useContext,
@@ -6,7 +6,6 @@ import React, {
   useState,
 } from "react";
 
-type FormElementType = Record<string, any>;
 interface FormProviderProps {
   children: ReactNode;
 }
@@ -23,10 +22,8 @@ export const FormProvider = ({ children }: FormProviderProps) => {
   const [formValues, setFormValues] = useState<{
     [key: string]: any;
   }>({});
-  const [renders, setRenders] = useState<number>(0);
   const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
   useEffect(() => {
-    setRenders((prev) => prev + 1);
     console.log(formValues);
   }, [formValues]);
 

@@ -1,8 +1,4 @@
-import React, {
-  forwardRef,
-  InputHTMLAttributes,
-  MouseEventHandler,
-} from "react";
+import { forwardRef, InputHTMLAttributes, MouseEventHandler } from "react";
 
 interface Props extends InputHTMLAttributes<HTMLButtonElement> {
   onClick: MouseEventHandler<HTMLButtonElement>;
@@ -10,7 +6,7 @@ interface Props extends InputHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button = forwardRef<HTMLButtonElement, Props>(
-  ({ onClick, text, ...props }, ref) => {
+  ({ onClick, text }, ref) => {
     return (
       <button
         onClick={onClick}
