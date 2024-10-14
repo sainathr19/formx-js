@@ -1,28 +1,38 @@
-import { forwardRef, InputHTMLAttributes, useEffect } from "react";
+import { forwardRef, InputHTMLAttributes } from "react";
 import ErrorList from "../../ErrorList";
-import { useForm } from "../../FormProvider";
+import { useField } from "../../useFeild";
 import { isEmail } from "../../utils/validators";
-
+interface ValidatorType {
+  validator: (value: string) => Promise<boolean> | boolean;
+  message: string;
+}
 interface EmailInputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
+  validators?: ValidatorType[];
+  debounce?: number;
 }
 
-const DefaultValidators = [{ validator: isEmail, message: "Invalid Email" }];
+let DefaultValidators: ValidatorType[] = [
+  { validator: isEmail, message: "Invalid Email" },
+];
 const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
-  ({ id }, ref) => {
-    const { registerFeild, handleChange, errors } = useForm();
-    useEffect(() => {
-      registerFeild(id, "");
-    }, []);
+  ({ id, validators, debounce, className, ...props }, ref) => {
+    const { error, onChange } = useField(
+      id,
+      "",
+      DefaultValidators.concat(validators || []),
+      debounce
+    );
     return (
       <div className="flex flex-col gap-1">
         <input
           type="email"
           ref={ref}
-          className="p-1 border border-slate-400 rounded-md"
-          onChange={(e) => handleChange(id, e.target.value, DefaultValidators)}
+          className={`p-1 border border-slate-400 rounded-md outline-none ${className}`}
+          onChange={onChange}
+          {...props}
         />
-        <ErrorList errors={errors[id]} />
+        <ErrorList errors={error} />
       </div>
     );
   }

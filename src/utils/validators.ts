@@ -17,5 +17,22 @@ const hasMaximumLen = (str : string , maxLength : number ) => {
     return str && str.length<=maxLength
 }
 
-export { hasMaximumLen, hasMinimumLen, isEmail, isEmpty, isMatch };
+const validateField = async (
+    id: string,
+    value: any,
+    validators: ( {
+        validator: (value: string) => Promise<boolean> | boolean;
+        message: string;
+      }
+      )[]
+  ): Promise<string[]> => {
+    const validationResults = await Promise.all(
+      validators.map(async ({ validator, message }) => {
+        const isValid = await validator(value);
+        return isValid ? null : message;
+      })
+    );
+    return validationResults.filter((result) => result !== null) as string[];
+  };
+export { hasMaximumLen, hasMinimumLen, isEmail, isEmpty, isMatch, validateField };
 

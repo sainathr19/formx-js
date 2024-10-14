@@ -5,62 +5,99 @@ import {
   useEffect,
   useState,
 } from "react";
+import { validateField } from "./utils/validators";
 
+const FormContext = createContext<FormValuesType | undefined>(undefined);
+
+//Form values will be object of Key i.e (id : Value) pair
+interface FormValuesType {
+  [key: string]: any;
+}
 interface FormProviderProps {
   children: ReactNode;
+  onSubmit?: (formValues: FormValuesType) => void;
 }
-const FormContext = createContext<{ [key: string]: any } | undefined>(
-  undefined
-);
 
 interface ValidatorType {
-  validator: (value: string) => boolean;
+  validator: (value: string) => Promise<boolean> | boolean;
   message: string;
 }
 
-export const FormProvider = ({ children }: FormProviderProps) => {
-  const [formValues, setFormValues] = useState<{
-    [key: string]: any;
-  }>({});
+export const FormProvider = ({ children, onSubmit }: FormProviderProps) => {
+  const [formValues, setFormValues] = useState<FormValuesType>({});
   const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
-  useEffect(() => {
-    console.log(formValues);
-  }, [formValues]);
+  const [isValid, setIsValid] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if (Object.keys(errors).some((key) => errors[key].length > 0)) {
+      setIsValid(false);
+    } else {
+      setIsValid(true);
+    }
+  }, [errors]);
+
+  //Function to Register Feild into the Context
   const registerFeild = (id: string, initalValue: any) => {
     if (!(id in formValues)) {
       setFormValues((prev) => ({ ...prev, [id]: initalValue }));
     } else {
-      // throw Error(`${id} has already been used , Use different Name`);
+      // throw Error(`${id} has already been used , Use different id`);
     }
   };
 
-  const handleChange = (
+  //Function to Handle change in any Field
+  const handleChange = async (
     id: string,
     value: any,
-    validators: ValidatorType[]
+    validators: ValidatorType[] = []
   ) => {
     setFormValues((prev) => ({ ...prev, [id]: value }));
-    if (validators) {
-      const currErrors: string[] = validators
-        .filter(({ validator }) => !validator(value))
-        .map(({ message }) => message);
-      if (currErrors) {
-        setErrors((prev) => ({ ...prev, [id]: currErrors }));
-        return;
-      }
+
+    if (validators.length > 0) {
+      setIsLoading(true);
+      const currentErrors = await validateField(id, value, validators);
+      setErrors((prev) => ({ ...prev, [id]: currentErrors }));
+      setIsLoading(false);
+    }
+  };
+
+  //Function to access Current Value of any Feild by Id
+  const getFieldValue = (id: string): any => {
+    return formValues[id];
+  };
+
+  //Function to access Errors of any Feild by Id
+  const getFieldError = (id: string): string[] | undefined => {
+    return errors[id];
+  };
+
+  //Invoke Onsubmit Callback on Submit
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    if (onSubmit) {
+      onSubmit(formValues);
     }
   };
 
   return (
     <FormContext.Provider
-      value={{ formValues, registerFeild, handleChange, errors }}
+      value={{
+        formValues,
+        registerFeild,
+        handleChange,
+        isLoading,
+        isValid,
+        getFieldError,
+        getFieldValue,
+      }}
     >
-      {children}
+      <form onSubmit={handleSubmit}>{children}</form>
     </FormContext.Provider>
   );
 };
 
+//Throw an Error if Context not used inside a FormProvider
 export const useForm = () => {
   const context = useContext(FormContext);
   if (!context) {

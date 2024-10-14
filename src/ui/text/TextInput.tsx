@@ -1,6 +1,6 @@
-import { forwardRef, InputHTMLAttributes, useEffect } from "react";
+import { forwardRef, InputHTMLAttributes } from "react";
 import ErrorList from "../../ErrorList";
-import { useForm } from "../../FormProvider";
+import { useField } from "../../useFeild";
 interface Validator {
   validator: (value: string) => boolean;
   message: string;
@@ -10,25 +10,22 @@ interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   required?: boolean;
   label?: string;
   id: string;
+  debounce?: number;
 }
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  ({ label, id, validators, required, ...props }, ref) => {
-    const { formValues, registerFeild, handleChange, errors } = useForm();
-    useEffect(() => {
-      registerFeild(id, "");
-    }, []);
+  ({ label, id, validators, required, debounce, className, ...props }, ref) => {
+    const { error, onChange } = useField(id, "", validators, debounce);
     return (
       <div className="flex flex-col justify-start gap-1">
         {label && <label className="w-max">{label}</label>}
         <input
-          className="p-1 border border-slate-400 rounded-md outline-none"
-          ref={ref}
+          className={`p-1 border rounded-md border-slate-400 ${className}`}
           type="text"
+          ref={ref}
           {...props}
-          value={formValues[id] || ""}
-          onChange={(e) => handleChange(id, e.target.value, validators)}
+          onChange={onChange}
         />
-        <ErrorList errors={errors[id]} />
+        <ErrorList errors={error} />
       </div>
     );
   }

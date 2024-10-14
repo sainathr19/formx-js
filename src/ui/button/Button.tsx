@@ -6,12 +6,12 @@ interface Props extends InputHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button = forwardRef<HTMLButtonElement, Props>(
-  ({ onClick, text }, ref) => {
+  ({ onClick, text, className }, ref) => {
     return (
       <button
         onClick={onClick}
         ref={ref}
-        className="bg-slate-100 border border-slate-300 px-4 py-1 rounded-md w-max"
+        className={`bg-slate-100 border border-slate-300 px-4 py-1 rounded-md w-max ${className}`}
       >
         {text}
       </button>

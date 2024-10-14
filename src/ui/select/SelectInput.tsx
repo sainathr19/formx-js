@@ -1,28 +1,25 @@
-import { forwardRef, useEffect } from "react";
-import { useForm } from "../../FormProvider";
+import { forwardRef, InputHTMLAttributes } from "react";
+import { useField } from "../../useFeild";
 interface SelectOptionType {
   label: string;
   value: any;
 }
-interface SelectInputProps {
+interface SelectInputProps extends InputHTMLAttributes<HTMLSelectElement> {
   options: SelectOptionType[];
   placeholder?: string;
   id: string;
 }
 const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
-  ({ options, id, placeholder }, ref) => {
-    const { formValues, registerFeild, handleChange } = useForm();
-    useEffect(() => {
-      registerFeild(id, "");
-    }, []);
+  ({ options, id, placeholder, className }, ref) => {
+    const { onChange } = useField(id, "");
+
     return (
       <div className="flex flex-col gap-1">
         <select
           id={id}
           ref={ref}
-          onChange={(e) => handleChange(id, e.target.value)}
-          value={formValues[id] || ""}
-          className="p-1 rounded-md"
+          onChange={onChange}
+          className={`p-1 rounded-md outline-none border border-slate-400 ${className}`}
         >
           {placeholder && (
             <option disabled value={""}>
