@@ -1,6 +1,7 @@
-import { forwardRef, InputHTMLAttributes, useEffect } from "react";
+import { ChangeEvent, forwardRef, InputHTMLAttributes, useEffect } from "react";
 import ErrorList from "../../ErrorList";
 import { useForm } from "../../FormProvider";
+import { useDebounce } from "../../utils/debounce";
 
 interface Validator {
   validator: (value: string) => Promise<boolean> | boolean;
@@ -38,15 +39,21 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       });
     }
 
+    const debouncedHandleChange = useDebounce(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        handleChange(id, e.target.value, validators);
+      },
+      300
+    );
+
     return (
       <div className="flex flex-col justify-start gap-1">
         <input
-          className="p-1 border border-slate-400 rounded-md outline-none"
+          className="p-1 border-2 border-slate-400 rounded-md outline-none"
           ref={ref}
           type="number"
           {...props}
-          value={formValues[id] || ""}
-          onChange={(e) => handleChange(id, e.target.value, validators)}
+          onChange={debouncedHandleChange}
         />
         <ErrorList errors={errors[id]} />
       </div>

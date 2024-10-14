@@ -1,52 +1,46 @@
-import { forwardRef, InputHTMLAttributes, useEffect, useState } from "react";
+import { ChangeEvent, forwardRef, InputHTMLAttributes, useEffect } from "react";
 import ErrorList from "../../ErrorList";
 import { useForm } from "../../FormProvider";
-
-interface Validator {
+import { useDebounce } from "../../utils/debounce";
+import { isEmail } from "../../utils/validators";
+interface ValidatorType {
   validator: (value: string) => Promise<boolean> | boolean;
-  error: string;
+  message: string;
 }
-
-interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  minLength?: number;
-  maxLength?: number;
-  validators?: Validator[];
+interface EmailInputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
-  matchWith?: string;
+  validators?: ValidatorType[];
 }
 
-const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
-  ({ minLength, maxLength, matchWith, validators, id, ...props }, ref) => {
-    const { formValues, handleChange, registerFeild, errors } = useForm();
-    const [showPassword, setShowPassword] = useState(false);
-
+const DefaultValidators: ValidatorType[] = [
+  { validator: isEmail, message: "Invalid Email" },
+];
+const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
+  ({ id, validators }, ref) => {
+    const { registerFeild, handleChange, errors } = useForm();
+    const debouncedHandleChange = useDebounce(
+      (e: ChangeEvent<HTMLInputElement>) =>
+        handleChange(id, e.target.value, validators),
+      1000
+    );
     useEffect(() => {
       registerFeild(id, "");
-    }, [id, registerFeild]);
-
+    }, []);
+    if (validators) {
+      DefaultValidators.concat(validators);
+    }
     return (
-      <div className="flex flex-col justify-start gap-1">
-        <div className="relative rounded-md border border-slate-400 overflow-hidden">
-          <input
-            className="border-none outline-none pr-16 focus:ring-0"
-            ref={ref}
-            type={showPassword ? "text" : "password"}
-            {...props}
-            onChange={(e) => handleChange(id, e.target.value)}
-            value={formValues[id] || ""}
-          />
-          <button
-            type="button"
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-sm text-slate-600"
-            onClick={() => setShowPassword((prev) => !prev)}
-          >
-            {showPassword ? "Hide" : "Show"}
-          </button>
-        </div>
+      <div className="flex flex-col gap-1">
+        <input
+          type="email"
+          ref={ref}
+          className="p-1 border border-slate-400 rounded-md"
+          onChange={debouncedHandleChange}
+        />
         <ErrorList errors={errors[id]} />
       </div>
     );
   }
 );
 
-export default PasswordInput;
+export default EmailInput;
