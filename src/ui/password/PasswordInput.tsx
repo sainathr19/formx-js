@@ -4,7 +4,7 @@ import { useField } from "../../useFeild";
 
 interface Validator {
   validator: (value: string) => boolean;
-  error: string;
+  message: string;
 }
 
 interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -31,13 +31,13 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
     ref
   ) => {
     const [showPassword, setShowPassword] = useState(false);
-    const { error, onChange } = useField(id, "");
+    const { error, onChange } = useField(id, "", validators || [], debounce);
 
     return (
       <div className="flex flex-col justify-start gap-1">
         <div className="relative rounded-md border border-slate-400 overflow-hidden">
           <input
-            className={`border-none outline-none pr-16 focus:ring-0 ${className}`}
+            className={`border-none outline-none pr-16 focus:ring-0 w-full ${className}`}
             ref={ref}
             type={showPassword ? "text" : "password"}
             {...props}

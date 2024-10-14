@@ -33,12 +33,14 @@ export const FormProvider = ({ children, onSubmit }: FormProviderProps) => {
       setIsValid(true);
     }
   }, [errors]);
-
+  useEffect(() => {
+    console.log(formValues);
+  }, [formValues]);
   const registerFeild = (id: string, initalValue: any) => {
     if (!(id in formValues)) {
       setFormValues((prev) => ({ ...prev, [id]: initalValue }));
     } else {
-      throw Error(`${id} has already been used , Use different id`);
+      // throw Error(`${id} has already been used , Use different id`);
     }
   };
 

@@ -12,15 +12,17 @@ interface EmailInputProps extends InputHTMLAttributes<HTMLInputElement> {
   debounce?: number;
 }
 
-const DefaultValidators: ValidatorType[] = [
+let DefaultValidators: ValidatorType[] = [
   { validator: isEmail, message: "Invalid Email" },
 ];
 const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
   ({ id, validators, debounce, className, ...props }, ref) => {
-    const { error, onChange } = useField(id, "", validators);
-    if (validators) {
-      DefaultValidators.concat(validators);
-    }
+    const { error, onChange } = useField(
+      id,
+      "",
+      DefaultValidators.concat(validators || []),
+      debounce
+    );
     return (
       <div className="flex flex-col gap-1">
         <input

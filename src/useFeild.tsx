@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useForm } from "./FormProvider";
 import { useDebounce } from "./utils/debounce";
-
 interface ValidatorType {
   validator: (value: string) => Promise<boolean> | boolean;
   message: string;
@@ -10,7 +9,8 @@ interface ValidatorType {
 export const useField = (
   id: string,
   initialValue: any,
-  validators?: ValidatorType[]
+  validators?: ValidatorType[],
+  debounce?: number
 ) => {
   const { registerFeild, handleChange, getFieldValue, getFieldError } =
     useForm();
@@ -27,7 +27,7 @@ export const useField = (
     ) => {
       handleChange(id, e.target.value, validators || []);
     },
-    300
+    debounce || 300
   );
 
   return {
