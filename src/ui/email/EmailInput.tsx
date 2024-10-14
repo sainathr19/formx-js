@@ -28,7 +28,7 @@ const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
         <input
           type="email"
           ref={ref}
-          className={`p-1 border border-slate-400 rounded-md ${className}`}
+          className={`p-1 border border-slate-400 rounded-md outline-none ${className}`}
           onChange={onChange}
           {...props}
         />

@@ -35,7 +35,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
 
     return (
       <div className="flex flex-col justify-start gap-1">
-        <div className="relative rounded-md border border-slate-400 overflow-hidden">
+        <div className="p-1 relative rounded-md border border-slate-400 overflow-hidden outline-none">
           <input
             className={`border-none outline-none pr-16 focus:ring-0 w-full ${className}`}
             ref={ref}

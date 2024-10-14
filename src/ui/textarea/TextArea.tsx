@@ -11,7 +11,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       <textarea
         ref={ref}
         {...props}
-        className={`rounded-md border border-slate-400 ${className}`}
+        className={`rounded-md border border-slate-400 outline-none p-1 ${className}`}
         onChange={onChange}
       />
     );

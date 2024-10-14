@@ -19,7 +19,7 @@ const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
           id={id}
           ref={ref}
           onChange={onChange}
-          className={`p-1 rounded-md ${className}`}
+          className={`p-1 rounded-md outline-none border border-slate-400 ${className}`}
         >
           {placeholder && (
             <option disabled value={""}>
