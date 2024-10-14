@@ -1,16 +1,16 @@
-import { forwardRef, useEffect } from "react";
+import { forwardRef, InputHTMLAttributes, useEffect } from "react";
 import { useForm } from "../../FormProvider";
 interface SelectOptionType {
   label: string;
   value: any;
 }
-interface SelectInputProps {
+interface SelectInputProps extends InputHTMLAttributes<HTMLSelectElement> {
   options: SelectOptionType[];
   placeholder?: string;
   id: string;
 }
 const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
-  ({ options, id, placeholder }, ref) => {
+  ({ options, id, placeholder, className }, ref) => {
     const { formValues, registerFeild, handleChange } = useForm();
     useEffect(() => {
       registerFeild(id, "");
@@ -22,7 +22,7 @@ const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
           ref={ref}
           onChange={(e) => handleChange(id, e.target.value)}
           value={formValues[id] || ""}
-          className="p-1 rounded-md"
+          className={`p-1 rounded-md ${className}`}
         >
           {placeholder && (
             <option disabled value={""}>

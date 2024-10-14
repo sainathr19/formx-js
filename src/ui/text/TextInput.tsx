@@ -14,7 +14,7 @@ interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   debounce?: number;
 }
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  ({ label, id, validators, required, debounce, ...props }, ref) => {
+  ({ label, id, validators, required, debounce, className, ...props }, ref) => {
     const { formValues, registerFeild, handleChange, errors } = useForm();
     useEffect(() => {
       registerFeild(id, "");
@@ -28,7 +28,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       <div className="flex flex-col justify-start gap-1">
         {label && <label className="w-max">{label}</label>}
         <input
-          className={`p-1 border-2 rounded-md border-slate-400`}
+          className={`p-1 border-2 rounded-md border-slate-400 ${className}`}
           type="text"
           ref={ref}
           {...props}

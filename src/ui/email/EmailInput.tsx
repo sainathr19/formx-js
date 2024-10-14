@@ -17,7 +17,7 @@ const DefaultValidators: ValidatorType[] = [
   { validator: isEmail, message: "Invalid Email" },
 ];
 const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
-  ({ id, validators, debounce }, ref) => {
+  ({ id, validators, debounce, className, ...props }, ref) => {
     const { registerFeild, handleChange, errors } = useForm();
     const debouncedHandleChange = useDebounce(
       (e: ChangeEvent<HTMLInputElement>) =>
@@ -35,8 +35,9 @@ const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
         <input
           type="email"
           ref={ref}
-          className="p-1 border border-slate-400 rounded-md"
+          className={`p-1 border border-slate-400 rounded-md ${className}`}
           onChange={debouncedHandleChange}
+          {...props}
         />
         <ErrorList errors={errors[id]} />
       </div>

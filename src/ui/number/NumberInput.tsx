@@ -2,6 +2,7 @@ import { ChangeEvent, forwardRef, InputHTMLAttributes, useEffect } from "react";
 import ErrorList from "../../ErrorList";
 import { useForm } from "../../FormProvider";
 import { useDebounce } from "../../utils/debounce";
+
 interface Validator {
   validator: (value: string) => Promise<boolean> | boolean;
   message: string;
@@ -16,7 +17,10 @@ interface NumberInputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
-  ({ id, required, minNumber, maxNumber, debounce, ...props }, ref) => {
+  (
+    { id, required, minNumber, maxNumber, debounce, className, ...props },
+    ref
+  ) => {
     const { formValues, registerFeild, handleChange, errors } = useForm();
 
     useEffect(() => {
@@ -49,7 +53,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     return (
       <div className="flex flex-col justify-start gap-1">
         <input
-          className="p-1 border-2 border-slate-400 rounded-md outline-none"
+          className={`p-1 border-2 border-slate-400 rounded-md outline-none ${className}`}
           ref={ref}
           type="number"
           {...props}

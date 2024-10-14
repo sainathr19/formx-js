@@ -24,7 +24,16 @@ interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
   (
-    { minLength, maxLength, matchWith, validators, id, debounce, ...props },
+    {
+      minLength,
+      maxLength,
+      matchWith,
+      validators,
+      id,
+      debounce,
+      className,
+      ...props
+    },
     ref
   ) => {
     const { formValues, handleChange, registerFeild, errors } = useForm();
@@ -42,7 +51,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
       <div className="flex flex-col justify-start gap-1">
         <div className="relative rounded-md border border-slate-400 overflow-hidden">
           <input
-            className="border-none outline-none pr-16 focus:ring-0"
+            className={`border-none outline-none pr-16 focus:ring-0 ${className}`}
             ref={ref}
             type={showPassword ? "text" : "password"}
             {...props}
