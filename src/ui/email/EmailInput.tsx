@@ -10,18 +10,19 @@ interface ValidatorType {
 interface EmailInputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
   validators?: ValidatorType[];
+  debounce?: number;
 }
 
 const DefaultValidators: ValidatorType[] = [
   { validator: isEmail, message: "Invalid Email" },
 ];
 const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
-  ({ id, validators }, ref) => {
+  ({ id, validators, debounce }, ref) => {
     const { registerFeild, handleChange, errors } = useForm();
     const debouncedHandleChange = useDebounce(
       (e: ChangeEvent<HTMLInputElement>) =>
         handleChange(id, e.target.value, validators),
-      1000
+      debounce || 300
     );
     useEffect(() => {
       registerFeild(id, "");

@@ -2,7 +2,6 @@ import { ChangeEvent, forwardRef, InputHTMLAttributes, useEffect } from "react";
 import ErrorList from "../../ErrorList";
 import { useForm } from "../../FormProvider";
 import { useDebounce } from "../../utils/debounce";
-
 interface Validator {
   validator: (value: string) => Promise<boolean> | boolean;
   message: string;
@@ -13,10 +12,11 @@ interface NumberInputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
   minNumber?: number;
   maxNumber?: number;
+  debounce?: number;
 }
 
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
-  ({ id, required, minNumber, maxNumber, ...props }, ref) => {
+  ({ id, required, minNumber, maxNumber, debounce, ...props }, ref) => {
     const { formValues, registerFeild, handleChange, errors } = useForm();
 
     useEffect(() => {
@@ -43,7 +43,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       (e: ChangeEvent<HTMLInputElement>) => {
         handleChange(id, e.target.value, validators);
       },
-      300
+      debounce || 300
     );
 
     return (

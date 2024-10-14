@@ -2,7 +2,6 @@ import { ChangeEvent, forwardRef, InputHTMLAttributes, useEffect } from "react";
 import ErrorList from "../../ErrorList";
 import { useForm } from "../../FormProvider";
 import { useDebounce } from "../../utils/debounce";
-
 interface Validator {
   validator: (value: string) => boolean;
   message: string;
@@ -12,18 +11,18 @@ interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   required?: boolean;
   label?: string;
   id: string;
+  debounce?: number;
 }
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  ({ label, id, validators, required, ...props }, ref) => {
+  ({ label, id, validators, required, debounce, ...props }, ref) => {
     const { formValues, registerFeild, handleChange, errors } = useForm();
     useEffect(() => {
       registerFeild(id, "");
     }, []);
-    const hasError: boolean = errors[id]?.length > 0 ? true : false;
     const debouncedHandleChange = useDebounce(
       (e: ChangeEvent<HTMLInputElement>) =>
         handleChange(id, e.target.value, validators),
-      300
+      debounce || 300
     );
     return (
       <div className="flex flex-col justify-start gap-1">
@@ -31,6 +30,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         <input
           className={`p-1 border-2 rounded-md border-slate-400`}
           type="text"
+          ref={ref}
           {...props}
           onChange={debouncedHandleChange}
         />
