@@ -38,7 +38,7 @@ export const FormProvider = ({ children, onSubmit }: FormProviderProps) => {
     if (!(id in formValues)) {
       setFormValues((prev) => ({ ...prev, [id]: initalValue }));
     } else {
-      // throw Error(`${id} has already been used , Use different id`);
+      throw Error(`${id} has already been used , Use different id`);
     }
   };
 
