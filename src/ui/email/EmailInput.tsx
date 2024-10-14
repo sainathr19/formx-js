@@ -1,7 +1,6 @@
-import { ChangeEvent, forwardRef, InputHTMLAttributes, useEffect } from "react";
+import { forwardRef, InputHTMLAttributes } from "react";
 import ErrorList from "../../ErrorList";
-import { useForm } from "../../FormProvider";
-import { useDebounce } from "../../utils/debounce";
+import { useField } from "../../useFeild";
 import { isEmail } from "../../utils/validators";
 interface ValidatorType {
   validator: (value: string) => Promise<boolean> | boolean;
@@ -18,15 +17,7 @@ const DefaultValidators: ValidatorType[] = [
 ];
 const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
   ({ id, validators, debounce, className, ...props }, ref) => {
-    const { registerFeild, handleChange, errors } = useForm();
-    const debouncedHandleChange = useDebounce(
-      (e: ChangeEvent<HTMLInputElement>) =>
-        handleChange(id, e.target.value, validators),
-      debounce || 300
-    );
-    useEffect(() => {
-      registerFeild(id, "");
-    }, []);
+    const { error, onChange } = useField(id, "", validators);
     if (validators) {
       DefaultValidators.concat(validators);
     }
@@ -36,10 +27,10 @@ const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           type="email"
           ref={ref}
           className={`p-1 border border-slate-400 rounded-md ${className}`}
-          onChange={debouncedHandleChange}
+          onChange={onChange}
           {...props}
         />
-        <ErrorList errors={errors[id]} />
+        <ErrorList errors={error} />
       </div>
     );
   }

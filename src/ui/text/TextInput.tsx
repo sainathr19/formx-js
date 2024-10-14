@@ -1,7 +1,6 @@
-import { ChangeEvent, forwardRef, InputHTMLAttributes, useEffect } from "react";
+import { forwardRef, InputHTMLAttributes } from "react";
 import ErrorList from "../../ErrorList";
-import { useForm } from "../../FormProvider";
-import { useDebounce } from "../../utils/debounce";
+import { useField } from "../../useFeild";
 interface Validator {
   validator: (value: string) => boolean;
   message: string;
@@ -15,15 +14,7 @@ interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   ({ label, id, validators, required, debounce, className, ...props }, ref) => {
-    const { formValues, registerFeild, handleChange, errors } = useForm();
-    useEffect(() => {
-      registerFeild(id, "");
-    }, []);
-    const debouncedHandleChange = useDebounce(
-      (e: ChangeEvent<HTMLInputElement>) =>
-        handleChange(id, e.target.value, validators),
-      debounce || 300
-    );
+    const { error, onChange } = useField(id, "", validators);
     return (
       <div className="flex flex-col justify-start gap-1">
         {label && <label className="w-max">{label}</label>}
@@ -32,9 +23,9 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           type="text"
           ref={ref}
           {...props}
-          onChange={debouncedHandleChange}
+          onChange={onChange}
         />
-        <ErrorList errors={errors[id]} />
+        <ErrorList errors={error} />
       </div>
     );
   }

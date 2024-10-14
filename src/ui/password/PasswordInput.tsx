@@ -1,13 +1,7 @@
-import {
-  ChangeEvent,
-  forwardRef,
-  InputHTMLAttributes,
-  useEffect,
-  useState,
-} from "react";
+import { forwardRef, InputHTMLAttributes, useState } from "react";
 import ErrorList from "../../ErrorList";
-import { useForm } from "../../FormProvider";
-import { useDebounce } from "../../utils/debounce";
+import { useField } from "../../useFeild";
+
 interface Validator {
   validator: (value: string) => boolean;
   error: string;
@@ -36,17 +30,9 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
     },
     ref
   ) => {
-    const { formValues, handleChange, registerFeild, errors } = useForm();
     const [showPassword, setShowPassword] = useState(false);
+    const { error, onChange } = useField(id, "");
 
-    useEffect(() => {
-      registerFeild(id, "");
-    }, [id, registerFeild]);
-    const debouncedHandleChange = useDebounce(
-      (e: ChangeEvent<HTMLInputElement>) =>
-        handleChange(id, e.target.value, validators),
-      debounce || 300
-    );
     return (
       <div className="flex flex-col justify-start gap-1">
         <div className="relative rounded-md border border-slate-400 overflow-hidden">
@@ -55,7 +41,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             ref={ref}
             type={showPassword ? "text" : "password"}
             {...props}
-            onChange={debouncedHandleChange}
+            onChange={onChange}
           />
           <button
             type="button"
@@ -65,7 +51,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             {showPassword ? "Hide" : "Show"}
           </button>
         </div>
-        <ErrorList errors={errors[id]} />
+        <ErrorList errors={error} />
       </div>
     );
   }

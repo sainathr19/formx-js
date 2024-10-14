@@ -24,9 +24,15 @@ export const FormProvider = ({ children, onSubmit }: FormProviderProps) => {
     [key: string]: any;
   }>({});
   const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
+  const [isValid, setIsValid] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    console.log(formValues);
-  }, [formValues]);
+    if (Object.keys(errors).some((key) => errors[key].length > 0)) {
+      setIsValid(false);
+    } else {
+      setIsValid(true);
+    }
+  }, [errors]);
 
   const registerFeild = (id: string, initalValue: any) => {
     if (!(id in formValues)) {
@@ -43,20 +49,36 @@ export const FormProvider = ({ children, onSubmit }: FormProviderProps) => {
   ) => {
     setFormValues((prev) => ({ ...prev, [id]: value }));
     if (validators) {
-      const validationResults = await Promise.all(
-        validators.map(async ({ validator, message }) => {
-          const res = await validator(value);
-          return res ? null : message;
-        })
-      );
-      const currErrors: string[] = validationResults.filter(
-        (result) => result != null
-      );
-      if (currErrors) {
-        setErrors((prev) => ({ ...prev, [id]: currErrors }));
-        return;
+      setIsLoading(true);
+      try {
+        const validationResults = await Promise.all(
+          validators.map(async ({ validator, message }) => {
+            const res = await validator(value);
+            return res ? null : message;
+          })
+        );
+        const currErrors: string[] = validationResults.filter(
+          (result) => result != null
+        );
+        if (currErrors) {
+          setErrors((prev) => ({ ...prev, [id]: currErrors }));
+          return;
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     }
+    setIsLoading(false);
+  };
+
+  const getFieldValue = (id: string): any => {
+    return formValues[id];
+  };
+
+  const getFieldError = (id: string): string[] | undefined => {
+    return errors[id];
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -67,7 +89,16 @@ export const FormProvider = ({ children, onSubmit }: FormProviderProps) => {
 
   return (
     <FormContext.Provider
-      value={{ formValues, registerFeild, handleChange, errors }}
+      value={{
+        formValues,
+        registerFeild,
+        handleChange,
+        errors,
+        isLoading,
+        isValid,
+        getFieldError,
+        getFieldValue,
+      }}
     >
       <form onSubmit={handleSubmit}>{children}</form>
     </FormContext.Provider>

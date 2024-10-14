@@ -1,7 +1,6 @@
-import { ChangeEvent, forwardRef, InputHTMLAttributes, useEffect } from "react";
+import { forwardRef, InputHTMLAttributes } from "react";
 import ErrorList from "../../ErrorList";
-import { useForm } from "../../FormProvider";
-import { useDebounce } from "../../utils/debounce";
+import { useField } from "../../useFeild";
 
 interface Validator {
   validator: (value: string) => Promise<boolean> | boolean;
@@ -21,12 +20,6 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     { id, required, minNumber, maxNumber, debounce, className, ...props },
     ref
   ) => {
-    const { formValues, registerFeild, handleChange, errors } = useForm();
-
-    useEffect(() => {
-      registerFeild(id, "");
-    }, [id, registerFeild]);
-
     const validators: Validator[] = [];
 
     if (minNumber !== undefined) {
@@ -42,13 +35,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         message: `Value should be no more than ${maxNumber}`,
       });
     }
-
-    const debouncedHandleChange = useDebounce(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        handleChange(id, e.target.value, validators);
-      },
-      debounce || 300
-    );
+    const { error, onChange } = useField(id, "", validators);
 
     return (
       <div className="flex flex-col justify-start gap-1">
@@ -57,9 +44,9 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
           ref={ref}
           type="number"
           {...props}
-          onChange={debouncedHandleChange}
+          onChange={onChange}
         />
-        <ErrorList errors={errors[id]} />
+        <ErrorList errors={error} />
       </div>
     );
   }
