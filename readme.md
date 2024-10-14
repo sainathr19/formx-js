@@ -109,3 +109,58 @@ FormX includes a built-in default debounce of 300 milliseconds for handling the 
   debounce={500} // Custom debounce duration in milliseconds
 />
 ```
+
+
+
+## Number Input
+
+- **`id`**: Unique identifier for the input element.
+- **`minNumber`**: Sets the minimum allowable value.
+- **`maxNumber`**: Sets the maximum allowable value.
+- **`placeholder`**: Placeholder text displayed when the input is empty.
+
+
+```javascript
+<NumberInput
+    id="age"
+    minNumber={18}
+    maxNumber={65}
+    placeholder="Select Your Age"
+/>
+```
+
+## Select Input
+
+- **`id`**: Unique identifier for the select input element.
+- **`options`**: Array of objects representing the available options.
+- **`placeholder`**: Placeholder text displayed when no option is selected.
+
+```javascript
+<SelectInput
+  id="location"
+  options={[
+      { label: "Karnataka", value: "karnataka" },
+      { label: "Goa", value: "goa" },
+  ]}
+  placeholder="Select a city"
+/>
+```
+
+
+## Text Area
+
+- **`id`**: Unique identifier for the textarea element.
+- **`placeholder`**: Placeholder text displayed when the textarea is empty.
+- **`rows`**: Number of visible text lines for the textarea.
+- **`columns`**: Number of visible text columns for the textarea.
+- **`required`**: Indicates whether the textarea is a required field.
+
+```javascript
+  <TextArea
+    id="feedback"
+    placeholder="Let us know "
+    rows={4}
+    required
+  />
+/>
+```
