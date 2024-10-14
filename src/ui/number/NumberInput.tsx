@@ -1,9 +1,9 @@
-import { forwardRef, InputHTMLAttributes, useEffect, useMemo } from "react";
+import { forwardRef, InputHTMLAttributes, useEffect } from "react";
 import ErrorList from "../../ErrorList";
 import { useForm } from "../../FormProvider";
 
 interface Validator {
-  validator: (value: string) => boolean;
+  validator: (value: string) => Promise<boolean> | boolean;
   message: string;
 }
 
@@ -17,28 +17,26 @@ interface NumberInputProps extends InputHTMLAttributes<HTMLInputElement> {
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   ({ id, required, minNumber, maxNumber, ...props }, ref) => {
     const { formValues, registerFeild, handleChange, errors } = useForm();
+
     useEffect(() => {
       registerFeild(id, "");
-    }, []);
-    const validators = useMemo(() => {
-      const validationArray = [];
+    }, [id, registerFeild]);
 
-      if (minNumber !== undefined) {
-        validationArray.push({
-          validator: (value: string) => parseFloat(value) >= minNumber,
-          message: `Value should be at least ${minNumber}`,
-        });
-      }
+    const validators: Validator[] = [];
 
-      if (maxNumber !== undefined) {
-        validationArray.push({
-          validator: (value: string) => parseFloat(value) <= maxNumber,
-          message: `Value should be no more than ${maxNumber}`,
-        });
-      }
+    if (minNumber !== undefined) {
+      validators.push({
+        validator: (value: string) => parseFloat(value) >= minNumber,
+        message: `Value should be at least ${minNumber}`,
+      });
+    }
 
-      return validationArray;
-    }, [minNumber, maxNumber]);
+    if (maxNumber !== undefined) {
+      validators.push({
+        validator: (value: string) => parseFloat(value) <= maxNumber,
+        message: `Value should be no more than ${maxNumber}`,
+      });
+    }
 
     return (
       <div className="flex flex-col justify-start gap-1">

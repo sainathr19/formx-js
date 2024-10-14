@@ -2,7 +2,7 @@ import { forwardRef, InputHTMLAttributes, useEffect } from "react";
 import ErrorList from "../../ErrorList";
 import { useForm } from "../../FormProvider";
 interface Validator {
-  validator: (value: string) => boolean;
+  validator: (value: string) => Promise<boolean> | boolean;
   message: string;
 }
 interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
