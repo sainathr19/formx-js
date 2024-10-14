@@ -21,26 +21,33 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     ref
   ) => {
     const validators: Validator[] = [];
-
+    if (required) {
+      validators.push({
+        validator: (value: string) => value !== "",
+        message: "Value cannot be Empty",
+      });
+    }
     if (minNumber !== undefined) {
       validators.push({
-        validator: (value: string) => parseFloat(value) >= minNumber,
+        validator: (value: string) =>
+          value == "" || parseFloat(value) >= minNumber,
         message: `Value should be at least ${minNumber}`,
       });
     }
 
     if (maxNumber !== undefined) {
       validators.push({
-        validator: (value: string) => parseFloat(value) <= maxNumber,
+        validator: (value: string) =>
+          value == "" || parseFloat(value) <= maxNumber,
         message: `Value should be no more than ${maxNumber}`,
       });
     }
-    const { error, onChange } = useField(id, "", validators);
+    const { error, onChange } = useField(id, "", validators, debounce);
 
     return (
       <div className="flex flex-col justify-start gap-1">
         <input
-          className={`p-1 border-2 border-slate-400 rounded-md outline-none ${className}`}
+          className={`p-1 border border-slate-400 rounded-md outline-none ${className}`}
           ref={ref}
           type="number"
           {...props}
