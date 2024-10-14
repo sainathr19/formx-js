@@ -6,4 +6,4 @@ export { default as PasswordInput } from "./ui/password/PasswordInput";
 export { default as SelectInput } from "./ui/select/SelectInput";
 export { default as SubmitButton } from "./ui/submit/SubmitButton";
 export { default as TextInput } from "./ui/text/TextInput";
-
+export { default as TextArea } from "./ui/textarea/TextArea";
