@@ -27,6 +27,7 @@ Install the package via npm:
 
 ```bash
 npm install formx-js
+```
 
 ## Basic Usage
 
