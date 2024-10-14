@@ -8,6 +8,7 @@ import {
 
 interface FormProviderProps {
   children: ReactNode;
+  onSubmit?: (formValues: { [key: string]: any }) => void;
 }
 const FormContext = createContext<{ [key: string]: any } | undefined>(
   undefined
@@ -18,7 +19,7 @@ interface ValidatorType {
   message: string;
 }
 
-export const FormProvider = ({ children }: FormProviderProps) => {
+export const FormProvider = ({ children, onSubmit }: FormProviderProps) => {
   const [formValues, setFormValues] = useState<{
     [key: string]: any;
   }>({});
@@ -57,12 +58,18 @@ export const FormProvider = ({ children }: FormProviderProps) => {
       }
     }
   };
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    if (onSubmit) {
+      onSubmit(formValues);
+    }
+  };
 
   return (
     <FormContext.Provider
       value={{ formValues, registerFeild, handleChange, errors }}
     >
-      {children}
+      <form onSubmit={handleSubmit}>{children}</form>
     </FormContext.Provider>
   );
 };
