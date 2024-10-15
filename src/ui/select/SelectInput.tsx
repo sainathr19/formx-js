@@ -10,7 +10,7 @@ interface SelectInputProps extends InputHTMLAttributes<HTMLSelectElement> {
   id: string;
 }
 const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
-  ({ options, id, placeholder, className }, ref) => {
+  ({ options, id, placeholder, className, defaultValue, ...props }, ref) => {
     const { onChange } = useField(id, "");
 
     return (
@@ -19,6 +19,8 @@ const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
           id={id}
           ref={ref}
           onChange={onChange}
+          defaultValue={defaultValue || ""}
+          {...props}
           className={`p-1 rounded-md outline-none border border-slate-400 ${className}`}
         >
           {placeholder && (
