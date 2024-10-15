@@ -11,16 +11,6 @@ FormX is a lightweight and flexible form handling library for React applications
 - Debounced input changes to minimize unnecessary renders
 - Custom styling support
 
-## Available Components
-
-- `FormProvider`
-- `TextInput`
-- `EmailInput`
-- `NumberInput`
-- `PasswordInput`
-- `SelectInput`
-- `SubmitButton`
-
 ## Installation
 
 Install the package via npm:
@@ -32,30 +22,82 @@ npm install formx-js
 ## Basic Usage
 
 ```javascript
-import React from "react";
-import { FormProvider, TextInput, SubmitButton, useForm } from "formx-test";
-
+import * from "formx-test";
 const BasicForm = () => {
   const handleSubmit = (formValues) => {
     console.log("Form Submitted with values:", formValues);
-  };
+  const NameValidators = [
+    {
+      validator: (value: string) => value !== "",
+      message: "Name cannot be empty",
+    },
+    {
+      validator: (value: string) => value.length >= 6,
+      message: "Minimum should be of 6 characters",
+    },
+  ];
+
+  const EmailValidators = [
+    {
+      validator: async (value: string) => {
+        let response = await axios.get(
+          "https://jsonplaceholder.typicode.com/posts"
+        );
+        return response.status === 200;
+      },
+      message: "Email already in use",
+    },
+  ];
 
   return (
-    <FormProvider onSubmit={handleSubmit}>
-      <TextInput
-        id="username"
-        placeholder="Enter your username"
-        validators={[
-          {
-            validator: (value) => value.length >= 3,
-            message: "Username must be at least 3 characters long",
-          },
-        ]}
-      />
-      <SubmitButton text="Submit Form" />
-    </FormProvider>
+    <>
+      <FormProvider
+        onSubmit={handleSubmit}
+      >
+          <TextInput
+            id="first_name"
+            validators={NameValidators}
+            placeholder="Enter your first name"
+          />
+          <NumberInput
+            id="age"
+            minNumber={18}
+            maxNumber={65}
+            placeholder="Select Your Age"
+            required
+          />
+          <EmailInput
+            id="email_id"
+            placeholder="Enter your email"
+            validators={EmailValidators}
+            debounce={1000}
+          />
+          <PasswordInput
+            id="password"
+            placeholder="Enter your password"
+          />
+          <TextArea
+            id="feedback"
+            placeholder="Let us know "
+            rows={4}
+            required
+          />
+          <SelectInput
+            id="location"
+            options={[
+              { label: "Karnataka", value: "karnataka" },
+              { label: "Goa", value: "goa" },
+            ]}
+            placeholder="Select a city"
+          />
+          <SubmitButton text="Submit" />
+      </FormProvider>
+    </>
   );
-};
+}
+
+export default App;
+
 
 export default BasicForm;
 
@@ -109,8 +151,23 @@ FormX includes a built-in default debounce of 300 milliseconds for handling the 
   debounce={500} // Custom debounce duration in milliseconds
 />
 ```
+## Email Input
 
+- **id**: Unique identifier for the input element, used to register the field.
+- **placeholder**: Text displayed when the input is empty.
+- **validators**: Array of custom validation logic:
+  - **validator**: Function returning `boolean` or `Promise<boolean>`.
+  - **message**: Error message displayed when validation fails.
+ - **Default Validation** : The Email Input component includes built-in regex validation to ensure the email is in a valid format.
 
+```javascript
+  <EmailInput
+    id="email_id"
+    placeholder="Enter your email"
+    validators={EmailValidators}
+    debounce={1000}
+  />
+```
 
 ## Number Input
 
