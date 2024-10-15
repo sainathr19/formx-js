@@ -1,16 +1,22 @@
 {
   "name": "formx-js",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Develop and manage forms easily.",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build:css": "postcss src/styles/tailwind.css -o dist/styles.css",
+    "build": "npm run build:css && tsc"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^18.3.11",
     "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^3.4.13"
   }
 }
