@@ -22,10 +22,19 @@ npm install formx-js
 ## Basic Usage
 
 ```javascript
-import * from "formx-test";
-const BasicForm = () => {
-  const handleSubmit = (formValues) => {
-    console.log("Form Submitted with values:", formValues);
+import {
+  EmailInput,
+  FormProvider,
+  NumberInput,
+  PasswordInput,
+  RadioInput,
+  SelectInput,
+  SubmitButton,
+  TextArea,
+  TextInput,
+} from "formx-js";
+import "formx-js/dist/styles.css";
+function BasicForm() {
   const NameValidators = [
     {
       validator: (value: string) => value !== "",
@@ -36,7 +45,6 @@ const BasicForm = () => {
       message: "Minimum should be of 6 characters",
     },
   ];
-
   const EmailValidators = [
     {
       validator: async (value: string) => {
@@ -50,56 +58,118 @@ const BasicForm = () => {
   ];
 
   return (
-    <>
       <FormProvider
-        onSubmit={handleSubmit}
+        onSubmit={(formValues: { [key: string]: any }) => {
+          alert(JSON.stringify(formValues));
+          console.log(formValues);
+        }}
       >
-          <TextInput
-            id="first_name"
-            validators={NameValidators}
-            placeholder="Enter your first name"
-          />
-          <NumberInput
-            id="age"
-            minNumber={18}
-            maxNumber={65}
-            placeholder="Select Your Age"
-            required
-          />
-          <EmailInput
-            id="email_id"
-            placeholder="Enter your email"
-            validators={EmailValidators}
-            debounce={1000}
-          />
-          <PasswordInput
-            id="password"
-            placeholder="Enter your password"
-          />
-          <TextArea
-            id="feedback"
-            placeholder="Let us know "
-            rows={4}
-            required
-          />
-          <SelectInput
-            id="location"
-            options={[
-              { label: "Karnataka", value: "karnataka" },
-              { label: "Goa", value: "goa" },
-            ]}
-            placeholder="Select a city"
-          />
-          <SubmitButton text="Submit" />
+          <div className="flex flex-col gap-4 p-4 text-left">
+            {/* First Name Field */}
+            <div className="flex flex-col gap-1">
+              <label htmlFor="first_name" className="font-medium">
+                First Name
+              </label>
+              <TextInput
+                id="first_name"
+                validators={NameValidators}
+                placeholder="Enter your first name"
+                debounce={1000}
+                required
+                className="rounded-md"
+              />
+            </div>
+            {/* Age Feild */}
+            <div className="flex flex-col gap-1">
+              <label htmlFor="age" className="font-medium">
+                Age
+              </label>
+              <NumberInput
+                id="age"
+                minNumber={18}
+                maxNumber={65}
+                placeholder="Select Your Age"
+                required
+              />
+            </div>
+            {/* Email Input Field */}
+            <div className="flex flex-col gap-1">
+              <label htmlFor="email_id" className="font-medium">
+                Email
+              </label>
+              <EmailInput
+                id="email_id"
+                placeholder="Enter your email"
+                validators={EmailValidators}
+                debounce={1000}
+                required
+              />
+            </div>
+
+            {/* Password Input Field */}
+            <div className="flex flex-col gap-1">
+              <label htmlFor="password" className="font-medium">
+                Password
+              </label>
+              <PasswordInput
+                id="password"
+                placeholder="Enter your password"
+                debounce={1000}
+                required
+              />
+            </div>
+
+            {/* Feedbackk*/}
+            <div className="flex flex-col gap-1">
+              <label htmlFor="feedback" className="font-medium">
+                Additional Comments
+              </label>
+              <TextArea
+                id="feedback"
+                placeholder="Let us know "
+                rows={4}
+                required
+              />
+            </div>
+
+            {/* Location Select Field */}
+            <div className="flex flex-col gap-1">
+              <label htmlFor="location" className="font-medium">
+                Location
+              </label>
+              <SelectInput
+                id="location"
+                options={[
+                  { label: "Karnataka", value: "karnataka" },
+                  { label: "Goa", value: "goa" },
+                ]}
+                placeholder="Select a city"
+                defaultValue=""
+              />
+            </div>
+            {/* Location Select Field */}
+            <div className="flex flex-col gap-1">
+              <label htmlFor="location" className="font-medium">
+                Gender
+              </label>
+              <RadioInput
+                id="gender"
+                options={[
+                  { label: "male", value: "Male" },
+                  { label: "female", value: "Female" },
+                ]}
+              />
+            </div>
+            {/* Submit Button */}
+            <div className="flex justify-center">
+              <SubmitButton text="Submit" />
+            </div>
       </FormProvider>
-    </>
   );
 }
 
-export default App;
-
-
 export default BasicForm;
+
 
 ```
 
@@ -219,5 +289,20 @@ FormX includes a built-in default debounce of 300 milliseconds for handling the 
     rows={4}
     required
   />
+/>
+```
+## Radio Input
+
+- **`id`**: Unique identifier for the select input element.
+- **`options`**: Array of objects representing the available options.
+- **`placeholder`**: Placeholder text displayed when no option is selected.
+
+```javascript
+<RadioInput
+    id="gender"
+    options={[
+    { label: "male", value: "Male" },
+    { label: "female", value: "Female" },
+    ]}
 />
 ```
