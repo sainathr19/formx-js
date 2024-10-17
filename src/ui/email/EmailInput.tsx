@@ -1,6 +1,6 @@
 import { forwardRef, InputHTMLAttributes } from "react";
-import ErrorList from "../../ErrorList";
-import { useField } from "../../useFeild";
+import { useField } from "../../hooks/useFeild";
+import ErrorList from "../../utils/ErrorList";
 import { isEmail } from "../../utils/validators";
 interface ValidatorType {
   validator: (value: string) => Promise<boolean> | boolean;

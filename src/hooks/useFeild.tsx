@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm } from "./FormProvider";
+import { useForm } from "./hooks/FormProvider";
 import { useDebounce } from "./utils/debounce";
 interface ValidatorType {
   validator: (value: string) => Promise<boolean> | boolean;

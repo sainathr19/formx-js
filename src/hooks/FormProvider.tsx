@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { validateField } from "./utils/validators";
+import { validateField } from "../utils/validators";
 
 const FormContext = createContext<FormValuesType | undefined>(undefined);
 

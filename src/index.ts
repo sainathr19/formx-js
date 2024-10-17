@@ -1,4 +1,4 @@
-export { FormProvider, useForm } from "./FormProvider";
+export { FormProvider, useForm } from "./hooks/FormProvider";
 export { default as Button } from "./ui/button/Button";
 export { default as EmailInput } from "./ui/email/EmailInput";
 export { default as InputFeild } from "./ui/input/InputFeild";

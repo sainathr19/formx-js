@@ -1,5 +1,5 @@
 import { forwardRef, InputHTMLAttributes } from "react";
-import { useForm } from "../../FormProvider";
+import { useForm } from "../../hooks/FormProvider";
 
 interface Props extends InputHTMLAttributes<HTMLButtonElement> {
   text: string;
