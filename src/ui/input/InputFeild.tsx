@@ -1,5 +1,5 @@
 import { forwardRef, HTMLInputTypeAttribute, InputHTMLAttributes } from "react";
-import { useField } from "../../useFeild";
+import { useField } from "../../hooks/useFeild";
 import ErrorList from "../../utils/ErrorList";
 interface Validator {
   validator: (value: string) => Promise<boolean> | boolean;
